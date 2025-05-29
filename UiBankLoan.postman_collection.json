@@ -1,0 +1,263 @@
+{
+	"info": {
+		"_postman_id": "64adbb41-4f05-44a9-baa3-dfa97a52c583",
+		"name": "UiBankLoan",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "44233551",
+		"_collection_link": "https://shubhamthakur-9128561.postman.co/workspace/UIBank_E2E~dd5b1af4-6a5d-406a-823b-337f4190ef1d/collection/44233551-64adbb41-4f05-44a9-baa3-dfa97a52c583?action=share&source=collection_link&creator=44233551"
+	},
+	"item": [
+		{
+			"name": "ApplyLoan",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const loanResponse = pm.response.json();",
+							"pm.collectionVariables.set(\"rate\", loanResponse.rate);",
+							"pm.collectionVariables.set(\"loanID\", loanResponse.quoteid);",
+							"",
+							"const loanAccept = loanResponse.accepted;",
+							"",
+							"if (loanAccept === true){",
+							"//Check if API response status is 200",
+							"    pm.test('Apply loan status code is 200', function () {",
+							"        pm.response.to.have.status(200);",
+							"    });",
+							"",
+							"//Check if loan is accepted",
+							"    pm.test('Loan is accepted', function () {",
+							"        pm.expect(loanResponse.accepted).to.be.true;",
+							"    });   ",
+							"}",
+							"",
+							"else if (loanAccept === false)",
+							"{",
+							"    //Check if API response status is 200",
+							"    pm.test('Apply loan status code is 200', function () {",
+							"        pm.response.to.have.status(200);",
+							"    });",
+							"",
+							"    //Check if loan is accepted",
+							"    pm.test('Loan application failed', function () {",
+							"        pm.expect(loanResponse.accepted).to.be.false;",
+							"    });",
+							"}",
+							"",
+							"else",
+							"{",
+							"    //Check if API request is bad input",
+							"    pm.test('Apply loan status code is 400 - Bad request', function () {",
+							"        pm.response.to.have.status(400);",
+							"    });",
+							"",
+							"    //Check if loan application failed",
+							"    pm.test('Loan application failed', function () {",
+							"        pm.expect(loanResponse).to.have.property('error');",
+							"        pm.expect(loanResponse.error).to.have.property('message');",
+							"        console.log(loanResponse.error.message);",
+							"    });",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"email\", pm.iterationData.get(\"Email\"));",
+							"pm.collectionVariables.set(\"loanAmt\", pm.iterationData.get(\"LoanAmount\"));",
+							"pm.collectionVariables.set(\"term\", pm.iterationData.get(\"Term\"));",
+							"pm.collectionVariables.set(\"income\", pm.iterationData.get(\"Income\"));",
+							"pm.collectionVariables.set(\"age\", pm.iterationData.get(\"Age\"));"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"{{email}}\",\n    \"amount\": {{loanAmt}},\n    \"term\": {{term}},\n    \"income\": {{income}},\n    \"age\": {{age}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://uibank-api.azurewebsites.net/api/quotes/newquote",
+					"protocol": "https",
+					"host": [
+						"uibank-api",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"quotes",
+						"newquote"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetLoanDetails",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const retrieveloanData = pm.response.json();",
+							"",
+							"const amt = parseInt(pm.collectionVariables.get(\"loanAmt\"));",
+							"const term = parseInt(pm.collectionVariables.get(\"term\"));",
+							"const income = parseInt(pm.collectionVariables.get(\"income\"));",
+							"const age = parseInt(pm.collectionVariables.get(\"age\"));",
+							"const rate = parseInt(pm.collectionVariables.get(\"rate\"));",
+							"const email = pm.collectionVariables.get(\"email\");",
+							"const loanID = pm.collectionVariables.get(\"loanID\");",
+							"",
+							"",
+							"if (loanID !== null)",
+							"{",
+							"",
+							"//Check if API response status is 200",
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"//Check if amount in response matches the variable loanAmt",
+							"pm.test('Amount in response matches the variable loanAmt', function () {",
+							"    pm.expect(retrieveloanData.amount).to.eql(amt);",
+							"});",
+							"",
+							"//Check if term in response matches the variable term",
+							"pm.test('Term in response matches the variable term', function () {",
+							"    pm.expect(retrieveloanData.term).to.eql(term);",
+							"});",
+							"",
+							"//Check if income in response matches the variable income",
+							"pm.test('Income in response matches the variable income', function () {",
+							"    pm.expect(retrieveloanData.income).to.eql(income);",
+							"});",
+							"",
+							"//Check if rate in response matches the variable rate",
+							"pm.test('Rate in response matches the variable rate', function () {",
+							"    pm.expect(retrieveloanData.rate).to.eql(rate);",
+							"});",
+							"",
+							"//Check if id in response matches the variable loanID",
+							"pm.test('ID in response matches the variable loanID', function () {",
+							"    pm.expect(retrieveloanData.id).to.eql(loanID);",
+							"});",
+							"",
+							"}",
+							"",
+							"else",
+							"{",
+							"    pm.test('Loan ID is missing', function () {",
+							"        pm.expect(pm.response).to.have.status(400);",
+							"        console.log(pm.response.json().error.message);",
+							"    });",
+							"}",
+							"",
+							"",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://uibank-api.azurewebsites.net/api/quotes/{{loanID}}",
+					"protocol": "https",
+					"host": [
+						"uibank-api",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"quotes",
+						"{{loanID}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "email",
+			"value": "some@sample.com",
+			"type": "string"
+		},
+		{
+			"key": "loanAmt",
+			"value": "100000",
+			"type": "string"
+		},
+		{
+			"key": "term",
+			"value": "3",
+			"type": "string"
+		},
+		{
+			"key": "income",
+			"value": "0",
+			"type": "string"
+		},
+		{
+			"key": "age",
+			"value": "18",
+			"type": "string"
+		},
+		{
+			"key": "loanID",
+			"value": "6835fe56b04a3b61558b7b04",
+			"type": "string"
+		},
+		{
+			"key": "rate",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

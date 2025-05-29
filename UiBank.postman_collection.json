@@ -1,0 +1,578 @@
+{
+	"info": {
+		"_postman_id": "a754deda-caa2-45c2-b5a9-da9cfe1b3b2a",
+		"name": "UiBank",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "44233551",
+		"_collection_link": "https://shubhamthakur-9128561.postman.co/workspace/UIBank_E2E~dd5b1af4-6a5d-406a-823b-337f4190ef1d/collection/44233551-a754deda-caa2-45c2-b5a9-da9cfe1b3b2a?action=share&source=collection_link&creator=44233551"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const loginResponse = pm.response.json();",
+							"",
+							"pm.globals.set(\"user_id\", loginResponse.userId);",
+							"pm.globals.set(\"auth_id\", loginResponse.id);",
+							"",
+							"    pm.test(\"Validate login status is 200\", function()",
+							"    {",
+							"    pm.response.to.have.status(200);",
+							"    });",
+							"",
+							"    pm.test(\"Validate userId is present\", function() {",
+							"        pm.expect(loginResponse.userId).to.exist;",
+							"        pm.expect(loginResponse.userId).to.be.a('string').and.not.empty; // Or 'number' depending on your API",
+							"    });",
+							"",
+							"    pm.test(\"Validate id (auth_id) is present\", function() {",
+							"        pm.expect(loginResponse.id).to.exist;",
+							"        pm.expect(loginResponse.id).to.be.a('string').and.not.empty; // Or 'number'",
+							"    });",
+							"",
+							"    pm.test(\"Validate login status is 401\", function ()",
+							"    {",
+							"        pm.response.to.have.status(401);",
+							"        console.log(loginResponse.error.message);",
+							"    });",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"username\", pm.iterationData.get(\"Username\"));",
+							"pm.collectionVariables.set(\"password\", pm.iterationData.get(\"Password\"));"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"{{username}}\",\n    \"password\": \"{{password}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://uibank-api.azurewebsites.net/api/users/login",
+					"protocol": "https",
+					"host": [
+						"uibank-api",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"users",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetUserProfile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const userprofile = pm.response.json();",
+							"",
+							"const userProfileSchema = ",
+							"{",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"    \"gender\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"title\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"firstName\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"lastName\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"type\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"employmentStatus\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"maritalStatus\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"locked\": {",
+							"      \"type\": \"boolean\"",
+							"    },",
+							"    \"username\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"email\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"emailVerified\": {",
+							"      \"type\": \"boolean\"",
+							"    },",
+							"    \"id\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"age\": {",
+							"      \"type\": \"integer\"",
+							"    },",
+							"    \"numberOfDependents\": {",
+							"      \"type\": \"integer\"",
+							"    }",
+							"  },",
+							"  \"required\": [",
+							"    \"gender\",",
+							"    \"title\",",
+							"    \"firstName\",",
+							"    \"lastName\",",
+							"    \"type\",",
+							"    \"employmentStatus\",",
+							"    \"maritalStatus\",",
+							"    \"locked\",",
+							"    \"username\",",
+							"    \"email\",",
+							"    \"emailVerified\",",
+							"    \"id\",",
+							"    \"age\",",
+							"    \"numberOfDependents\"",
+							"  ]",
+							"};",
+							"",
+							"pm.test(\"User Profile Response Status Code\", function ()",
+							"{",
+							"    pm.response.to.have.status(200);",
+							"}); ",
+							"",
+							"pm.test(\"User Profile Schema Validation\", function () ",
+							"{",
+							"    pm.response.to.have.jsonSchema(userProfileSchema);",
+							"});",
+							"",
+							"pm.test(\"Validate username in response\", function()",
+							"{",
+							"    var user = pm.collectionVariables.get(\"username\");",
+							"    pm.expect(userprofile.username).to.eql(user);",
+							"});",
+							"",
+							"",
+							"",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"packages": {},
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{auth_id}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://uibank-api.azurewebsites.net/api/users/{{user_id}}",
+					"protocol": "https",
+					"host": [
+						"uibank-api",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"users",
+						"{{user_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateAccount",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"input_bal\", pm.iterationData.get(\"Balance\"));",
+							"pm.collectionVariables.set(\"acc_type\", pm.iterationData.get(\"AccountType\").toLowerCase());",
+							"",
+							"function generateAccName()",
+							"{",
+							"    var accName = pm.collectionVariables.get(\"username\") + \"_\" + pm.collectionVariables.get(\"acc_type\");",
+							"    return accName;",
+							"}",
+							"",
+							"pm.collectionVariables.set(\"acc_name\", generateAccName());",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const createAccResponse = pm.response.json();",
+							"pm.collectionVariables.set(\"acc_number\", createAccResponse.id);",
+							"pm.collectionVariables.set(\"acc_bal\", createAccResponse.balance);",
+							"",
+							"function generateAccName()",
+							"{",
+							"    var accName = pm.collectionVariables.get(\"username\") + \"_\" + pm.collectionVariables.get(\"acc_type\");",
+							"    return accName;",
+							"}",
+							"",
+							"pm.test(\"Validate status of CreateAccount API\", function()",
+							"{",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Validate account name logic\", function()",
+							"{",
+							"    var expectedAccName = generateAccName();",
+							"    pm.expect(createAccResponse.friendlyName).to.eql(expectedAccName);",
+							"});",
+							"",
+							"pm.test(\"Validate if request is unprocessable\", function()",
+							"{",
+							"    pm.expect(createAccResponse.error.statusCode).to.eql(422);",
+							"    var errorMessage = createAccResponse.error.message;",
+							"    const startIndex = errorMessage.indexOf(\"Details:\");",
+							"    if (startIndex !== -1) ",
+							"    {",
+							"    const extractedMessage = errorMessage.slice(startIndex);",
+							"    console.log(extractedMessage);",
+							"    } ",
+							"    else ",
+							"    {",
+							"    console.log(\" 'Details:' not found in the string.\");",
+							"    }           ",
+							"});",
+							"",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{auth_id}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"friendlyName\": \"{{acc_name}}\",\n    \"type\": \"{{acc_type}}\",\n    \"userId\": \"{{user_id}}\",\n    \"balance\": {{input_bal}},\n    \"accountNumber\": 6707754\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://uibank-api.azurewebsites.net/api/accounts",
+					"protocol": "https",
+					"host": [
+						"uibank-api",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"accounts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAccounts",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const getAccountResponse = pm.response.json();",
+							"",
+							"//map function to traverse through each element of the response array and save the id value to new array",
+							"const accountIds = getAccountResponse.map(account => account.id);",
+							"pm.collectionVariables.set(\"account\", JSON.stringify(accountIds));",
+							"//console.log(accountIds);",
+							"",
+							"const balances = getAccountResponse.map(account => account.balance);",
+							"pm.collectionVariables.set(\"balance\", JSON.stringify(balances));  ",
+							"",
+							"var expectedaccid = pm.collectionVariables.get(\"acc_number\");",
+							"var expectedaccbal = parseInt(pm.collectionVariables.get(\"acc_bal\"));",
+							"",
+							"//Validate response status is 200",
+							"pm.test('Status code is 200', function () ",
+							"{",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"//Write a test to check if the account number is present in the response body.",
+							"pm.test('Account number is present', function () ",
+							"{   ",
+							"    pm.expect(accountIds).to.include(expectedaccid);",
+							"});",
+							"",
+							"pm.test('Validate account balance is correct', function () ",
+							"{   ",
+							"    pm.expect(balances).to.include(expectedaccbal);",
+							"});",
+							"",
+							"var indexAcc = accountIds.indexOf(expectedaccid);",
+							"pm.collectionVariables.set(\"acc_bal\", parseInt(balances[indexAcc]));"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{auth_id}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://uibank-api.azurewebsites.net/api/accounts?filter[where][userId]={{user_id}}",
+					"protocol": "https",
+					"host": [
+						"uibank-api",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"accounts"
+					],
+					"query": [
+						{
+							"key": "filter[where][userId]",
+							"value": "{{user_id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TransferFund",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const transferResponse = pm.response.json();",
+							"",
+							"//Check if the response code is 200",
+							"",
+							"pm.test('Transfer Fund API status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"//Check if the TransfertoAccountID matches the request parameter",
+							"pm.test('Transfer Fund API TransfertoAccountID matches the request parameter', function () {",
+							"    const requestTransfertoAccountId = pm.collectionVariables.get(\"transferto\");",
+							"    pm.expect(transferResponse.TransfertoAccountId).to.eql(requestTransfertoAccountId);",
+							"});",
+							"",
+							"//Check if the balance value in response equals acc_bal - transferamt",
+							"pm.test('Transfer Fund API balance is correct', function () {",
+							"    const acc_bal = pm.collectionVariables.get(\"acc_bal\");",
+							"    const transferamt = pm.collectionVariables.get(\"transferAmt\");",
+							"    pm.expect(transferResponse.balance).to.eql(acc_bal - transferamt);",
+							"});",
+							"",
+							"//Check if accountId in response matches acc_number",
+							"pm.test('Transfer Fund API accountId matches the request parameter', function () {",
+							"    const requestAccountId = pm.collectionVariables.get(\"acc_number\");",
+							"    pm.expect(transferResponse.accountId).to.eql(requestAccountId);",
+							"});",
+							"",
+							"//Check if the description in response matches the string 'Transfer to Account: {{transferto}}",
+							"pm.test('Transfer Fund API description is correct', function () {",
+							"    const requestTransfertoAccountId = pm.collectionVariables.get(\"transferto\");",
+							"    pm.expect(transferResponse.description).to.eql(\"Transfer to Account: \" + requestTransfertoAccountId);",
+							"});",
+							"",
+							"//pm.execution.setNextRequest(\"GetAccounts\");"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"transferAmt\", pm.iterationData.get(\"TransferAmount\"));"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{auth_id}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"type\": \"transfer\",\n    \"dispute\": \"ok\",\n    \"ref\": \"\",\n    \"description\": \"transfer was made for demo purposes\",\n    \"amount\": {{transferAmt}},\n    \"TransfertoAccountId\": \"{{transferto}}\",\n    \"balance\": {{acc_bal}},\n    \"accountId\": \"{{acc_number}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://uibank-api.azurewebsites.net/api/transactions",
+					"protocol": "https",
+					"host": [
+						"uibank-api",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"transactions"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "username",
+			"value": "UIB_TEST001",
+			"type": "string"
+		},
+		{
+			"key": "password",
+			"value": "P-A$$W0RD.1",
+			"type": "string"
+		},
+		{
+			"key": "acc_type",
+			"value": "checking",
+			"type": "string"
+		},
+		{
+			"key": "acc_name",
+			"value": "UIB_TEST001_Savings",
+			"type": "string"
+		},
+		{
+			"key": "acc_number",
+			"value": "68359250b04a3b61558b79bb",
+			"type": "string"
+		},
+		{
+			"key": "balance",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "account",
+			"value": ""
+		},
+		{
+			"key": "acc_bal",
+			"value": "1000",
+			"type": "string"
+		},
+		{
+			"key": "transferto",
+			"value": "68352fe96f30ba004a5c6ded",
+			"type": "string"
+		},
+		{
+			"key": "transferAmt",
+			"value": "20",
+			"type": "string"
+		},
+		{
+			"key": "input_bal",
+			"value": "100",
+			"type": "string"
+		}
+	]
+}
