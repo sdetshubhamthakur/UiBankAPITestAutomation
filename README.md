@@ -21,9 +21,31 @@ A total of 5 APIs are part of this collection, where the session authorization i
 
   e. Transfer fund: This API enables fund transfers across the linked accounts of the user.
 
+-----------
+
+#### UiBank Test Run Demo
+
+You can view a video demonstration of the API test suite here:
+
+[UiBank API Test Run Demo Video (Google Drive)](https://drive.google.com/file/d/1EGKqQxK3jCOhO4qB2RuqP3FUOozC-fry/view?usp=drive_link)
+
+------------
+
+
 #### 2. UiBankLoan APIs
 A total of 2 APIs are part of this collection, where the session authorization is not required.
 
   a. Apply Loan: This API helps applicants submit basic details like Loan amount, Loan term, Income, Age. It also evaluates whether loan should be approved or denied for the applicant.
 
   b. Get Loan Details: This API helps retrieve the loan details associated with a given Loan ID.
+
+
+  -----------
+
+#### UiBankLoan Test Run Demo
+
+You can view a video demonstration of the API test suite here:
+
+[UiBankLoan API Test Run Demo Video (Google Drive)](https://drive.google.com/file/d/1rS59QPLBfXKDQvnnLujiqfHbcOsfaJTY/view?usp=drive_link)
+
+------------
